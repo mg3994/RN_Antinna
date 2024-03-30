@@ -572,9 +572,9 @@ jobs:
       - name: Set artifact path # Set environment variable for artifact path
         run: |
           if [[ ${{ github.event.inputs.aab_generation }} == true ]]; then
-            echo "artifact_path=android/app/build/outputs/bundle/release/app.aab" >> $GITHUB_ENV
+            echo "artifact_path=android/app/build/outputs/bundle/release/*" >> $GITHUB_ENV
           else
-            echo "artifact_path=android/app/build/outputs/apk/release/app-release.apk" >> $GITHUB_ENV
+            echo "artifact_path=android/app/build/outputs/apk/release/*" >> $GITHUB_ENV
           fi
 
       - name: Push to Releases
