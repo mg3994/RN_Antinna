@@ -1,3 +1,102 @@
+
+# Learning Curve 
+## ToDo's 
+  - > **Screens**
+----
+* RESPONSIVE
+* Splash
+* Onboarding
+* Welcome
+* Login/SignUp
+* Social Login
+* Home
+* ThemeScreen
+* Bottom Navbar
+* Alert
+* Snackbar
+* Side Navigatiion Drawer
+* Image Slider
+* List Data
+* Selection Of Datwa from list
+* Navigation InBetween
+* Local DataBase
+* Map Screen
+* Stack NAVIGATION
+* Courasal Slider 
+* Image view
+* Svg View
+* Shader Views
+* Custom ----
+* Lottie
+* API Request
+* Loader
+* Search BAR
+  
+
+
+# TODO Learn
+## Steps
+* > **Taken Steps**
+  ---
+
+* Folder Structure
+* Solid Principle
+* Responsive Design
+* Theme
+* Route
+* Locale
+* Deeplinking
+* Navigation
+* Storage
+
+
+
+
+
+
+Testing: Write unit tests and integration tests to ensure the reliability of your app.
+Documentation: Document your codebase thoroughly to help other developers understand your implementation.
+Performance: Optimize your app's performance by minimizing re-renders and reducing unnecessary computations.
+Accessibility: Ensure your app is accessible to all users by following accessibility best practices.
+
+
+
+# Folder Structure
+```bash
+- src/
+  - assets/
+    - images/
+    - fonts/
+  - components/
+    - Button/
+      - Button.tsx
+      - Button.styles.ts
+    - TextInput/
+      - TextInput.tsx
+      - TextInput.styles.ts
+  - screens/
+    - Home/
+      - HomeScreen.tsx
+      - HomeScreen.styles.ts
+    - Profile/
+      - ProfileScreen.tsx
+      - ProfileScreen.styles.ts
+  - navigation/
+    - MainNavigator.tsx
+  - services/
+    - AuthService.ts
+    - ApiService.ts
+  - utils/
+    - helpers.ts
+  - theme/
+    - colors.ts
+    - typography.ts
+  - localization/
+    - en.json
+    - fr.json
+
+```
+
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
 # Getting Started
