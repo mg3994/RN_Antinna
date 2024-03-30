@@ -537,15 +537,20 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Change App Name
-        if: ${{ github.event.inputs.custom_app_name != '' }}
-        run: |
-          sed -i '' -e "s/\"name\": \".*\"/\"name\": \"${{ github.event.inputs.custom_app_name }}\"/" package.json
+      - name: Install Rename dependencies Globally
+        if: ${{ github.event.inputs.custom_app_name != '' || github.event.inputs.custom_package_name != '' }}
+        run: yarn global add react-native-rename
 
-      - name: Change Package Name
-        if: ${{ github.event.inputs.custom_package_name != '' }}
+      - name: Change App Name
+        if: ${{ github.event.inputs.custom_app_name != '' && github.event.inputs.custom_package_name == ''  }}
         run: |
-          sed -i '' -e "s/applicationId \".*\"/applicationId \"${{ github.event.inputs.custom_package_name }}\"/" android/app/build.gradle
+          npx react-native-rename "${{ github.event.inputs.custom_app_name }}"
+
+      # Rename App Name and Package Name using react-native-rename
+      - name: Change App Name and Package Name
+        if: ${{ github.event.inputs.custom_app_name != '' || github.event.inputs.custom_package_name != '' }}
+        run: |
+          npx react-native-rename "${{ github.event.inputs.custom_app_name }}" -b "${{ github.event.inputs.custom_package_name }}"
 
       - name: Create assets directory
         run: mkdir -p android/app/src/main/assets
@@ -559,7 +564,7 @@ jobs:
       - name: Assemble APK or AAB
         run: |
           if ${{ github.event.inputs.aab_generation == true }}; then
-            cd android && ./gradlew bundleRelease
+          npx react-native build-android --mode=release
           else
             cd android && ./gradlew assembleRelease
           fi
