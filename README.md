@@ -67,6 +67,7 @@ Accessibility: Ensure your app is accessible to all users by following accessibi
   - assets/
     - images/
     - fonts/
+    - svgs/
   - components/
     - Button/
       - Button.tsx
@@ -96,6 +97,15 @@ Accessibility: Ensure your app is accessible to all users by following accessibi
     - fr.json
 
 ```
+[Navigation](https://reactnavigation.org/)
+[responsive](https://www.npmjs.com/package/react-native-responsive-dimensions)
+# PAckages Used
+> yarn add @react-navigation/native
+> yarn add react-native-screens react-native-safe-area-context
+> yarn add @react-navigation/native-stack
+> yarn add react-native-responsive-dimensions
+
+
 
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
