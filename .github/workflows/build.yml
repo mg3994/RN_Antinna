@@ -563,15 +563,15 @@ jobs:
 
       - name: Assemble APK or AAB
         run: |
-          if ${{ github.event.inputs.aab_generation == true }}; then
-          npx react-native build-android --mode=release
+          if [[ ${{ github.event.inputs.aab_generation }} == true ]]; then
+            npx react-native build-android --mode=release
           else
             cd android && ./gradlew assembleRelease
           fi
 
       - name: Generate AAB or APK
         run: |
-          if ${{ github.event.inputs.aab_generation == true }}; then
+          if [[${{ github.event.inputs.aab_generation == true }}]]; then
             echo "artifact_path=android/app/build/outputs/bundle/release/app.aab" >> $GITHUB_ENV
           else
             echo "artifact_path=android/app/build/outputs/apk/release/app-release.apk" >> $GITHUB_ENV
