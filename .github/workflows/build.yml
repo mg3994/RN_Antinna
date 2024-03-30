@@ -1,29 +1,113 @@
+# # # # name: Manual Workflow for Building APK OR AAB
+
+# # # # on:
+# # # #   workflow_dispatch:
+# # # #     inputs:
+# # # #       aab_generation:
+# # # #         description: "Generate AAB"
+# # # #         required: false
+# # # #         default: false
+# # # #         type: boolean
+# # # #       change_splash:
+# # # #         description: "Change Splash"
+# # # #         required: false
+# # # #         default: false
+# # # #         type: boolean
+# # # #       generate_launcher_icons:
+# # # #         description: "Generate Launcher Icons"
+# # # #         required: false
+# # # #         default: false
+# # # #         type: boolean
+# # # #       custom_app_name:
+# # # #         description: "Custom App Name (Leave empty to skip)"
+# # # #         required: false
+# # # #         type: string
+# # # #       custom_package_name:
+# # # #         description: "Custom Package Name (Leave empty to skip)"
+# # # #         required: false
+# # # #         type: string
+
+# # # # jobs:
+# # # #   manual_dispatch:
+# # # #     runs-on: macos-latest
+# # # #     steps:
+# # # #       - uses: actions/checkout@v2
+
+# # # #       - name: Set up Java
+# # # #         uses: actions/setup-java@v1
+# # # #         with:
+# # # #           java-version: "12.x"
+
+# # # #       - name: Install Node.js
+# # # #         uses: actions/setup-node@v2
+# # # #         with:
+# # # #           node-version: '21.7.1'
+
+# # # #       - name: Install React Native CLI
+# # # #         run: npm install -g react-native-cli
+
+# # # #       - name: Get Node Dependencies
+# # # #         run: npm install
+
+# # # #       - name: Change Splash
+# # # #         if: ${{ github.event.inputs.change_splash == true }}
+# # # #         run: |
+# # # #           react-native set-splash --path <path_to_splash_image>
+
+# # # #       - name: Generate Launcher Icons
+# # # #         if: ${{ github.event.inputs.generate_launcher_icons == true }}
+# # # #         run: |
+# # # #           npx @bam.tech/react-native-make --icon <path_to_icon>
+
+# # # #       - name: Change App Name
+# # # #         if: ${{ github.event.inputs.custom_app_name != '' }}
+# # # #         run: |
+# # # #           sed -i '' -e "s/\"name\": \".*\"/\"name\": \"${{ github.event.inputs.custom_app_name }}\"/" package.json
+
+# # # #       - name: Change Package Name
+# # # #         if: ${{ github.event.inputs.custom_package_name != '' }}
+# # # #         run: |
+# # # #           sed -i '' -e "s/applicationId \".*\"/applicationId \"${{ github.event.inputs.custom_package_name }}\"/" android/app/build.gradle
+
+# # # #       - name: Bundle React Native
+# # # #         run: |
+# # # #           react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
+
+# # # #       - name: Generate AAB or APK
+# # # #         run: |
+# # # #           if ${{ github.event.inputs.aab_generation == true }}; then
+# # # #             cd android && ./gradlew bundleRelease
+# # # #             echo "artifact_path=android/app/build/outputs/bundle/release/app.aab" >> $GITHUB_ENV
+# # # #           else
+# # # #             cd android && ./gradlew assembleRelease
+# # # #             echo "artifact_path=android/app/build/outputs/apk/release/app-release.apk" >> $GITHUB_ENV
+# # # #           fi
+
+# # # #       - name: Push to Releases
+# # # #         uses: ncipollo/release-action@v1
+# # # #         with:
+# # # #           artifacts: ${{ env.artifact_path }}
+# # # #           tag: v1.0.${{ github.run_number }}
+# # # #           token: ${{ secrets.TOKEN }}
+
+# # # #//////////////////////////////////////
+
 # # # name: Manual Workflow for Building APK OR AAB
 
 # # # on:
 # # #   workflow_dispatch:
 # # #     inputs:
 # # #       aab_generation:
-# # #         description: "Generate AAB"
-# # #         required: false
-# # #         default: false
-# # #         type: boolean
-# # #       change_splash:
-# # #         description: "Change Splash"
-# # #         required: false
-# # #         default: false
-# # #         type: boolean
-# # #       generate_launcher_icons:
-# # #         description: "Generate Launcher Icons"
+# # #         description: 'Generate AAB'
 # # #         required: false
 # # #         default: false
 # # #         type: boolean
 # # #       custom_app_name:
-# # #         description: "Custom App Name (Leave empty to skip)"
+# # #         description: 'Custom App Name (Leave empty to skip)'
 # # #         required: false
 # # #         type: string
 # # #       custom_package_name:
-# # #         description: "Custom Package Name (Leave empty to skip)"
+# # #         description: 'Custom Package Name (Leave empty to skip)'
 # # #         required: false
 # # #         type: string
 
@@ -36,28 +120,18 @@
 # # #       - name: Set up Java
 # # #         uses: actions/setup-java@v1
 # # #         with:
-# # #           java-version: "12.x"
+# # #           java-version: '12.x'
 
 # # #       - name: Install Node.js
-# # #         uses: actions/setup-node@v2
+# # #         uses: actions/setup-node@v4
 # # #         with:
-# # #           node-version: '21.7.1'
+# # #           node-version: 20
 
 # # #       - name: Install React Native CLI
 # # #         run: npm install -g react-native-cli
 
 # # #       - name: Get Node Dependencies
 # # #         run: npm install
-
-# # #       - name: Change Splash
-# # #         if: ${{ github.event.inputs.change_splash == true }}
-# # #         run: |
-# # #           react-native set-splash --path <path_to_splash_image>
-
-# # #       - name: Generate Launcher Icons
-# # #         if: ${{ github.event.inputs.generate_launcher_icons == true }}
-# # #         run: |
-# # #           npx @bam.tech/react-native-make --icon <path_to_icon>
 
 # # #       - name: Change App Name
 # # #         if: ${{ github.event.inputs.custom_app_name != '' }}
@@ -90,7 +164,7 @@
 # # #           tag: v1.0.${{ github.run_number }}
 # # #           token: ${{ secrets.TOKEN }}
 
-# # #//////////////////////////////////////
+# # #######################################
 
 # # name: Manual Workflow for Building APK OR AAB
 
@@ -113,25 +187,26 @@
 
 # # jobs:
 # #   manual_dispatch:
-# #     runs-on: macos-latest
+# #     runs-on: ubuntu-latest
 # #     steps:
-# #       - uses: actions/checkout@v2
+# #       - name: Checkout code
+# #         uses: actions/checkout@v2
 
 # #       - name: Set up Java
 # #         uses: actions/setup-java@v1
 # #         with:
 # #           java-version: '12.x'
 
-# #       - name: Install Node.js
-# #         uses: actions/setup-node@v4
+# #       - name: Set up Node.js and Yarn
+# #         uses: actions/setup-node@v2
 # #         with:
-# #           node-version: 20
+# #           node-version: '14.x'
 
 # #       - name: Install React Native CLI
-# #         run: npm install -g react-native-cli
+# #         run: yarn global add react-native-cli
 
-# #       - name: Get Node Dependencies
-# #         run: npm install
+# #       - name: Install dependencies
+# #         run: yarn install
 
 # #       - name: Change App Name
 # #         if: ${{ github.event.inputs.custom_app_name != '' }}
@@ -143,9 +218,17 @@
 # #         run: |
 # #           sed -i '' -e "s/applicationId \".*\"/applicationId \"${{ github.event.inputs.custom_package_name }}\"/" android/app/build.gradle
 
+# #       - name: Create assets directory
+# #         run: mkdir -p android/app/src/main/assets
+
 # #       - name: Bundle React Native
 # #         run: |
-# #           react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
+# #           react-native bundle \
+# #             --platform android \
+# #             --dev false \
+# #             --entry-file index.js \
+# #             --bundle-output android/app/src/main/assets/index.android.bundle \
+# #             --assets-dest android/app/src/main/res
 
 # #       - name: Generate AAB or APK
 # #         run: |
@@ -163,8 +246,7 @@
 # #           artifacts: ${{ env.artifact_path }}
 # #           tag: v1.0.${{ github.run_number }}
 # #           token: ${{ secrets.TOKEN }}
-
-# #######################################
+# ##############################################################
 
 # name: Manual Workflow for Building APK OR AAB
 
@@ -198,9 +280,9 @@
 #           java-version: '12.x'
 
 #       - name: Set up Node.js and Yarn
-#         uses: actions/setup-node@v2
+#         uses: actions/setup-node@v4
 #         with:
-#           node-version: '14.x'
+#           node-version: '20'
 
 #       - name: Install React Native CLI
 #         run: yarn global add react-native-cli
@@ -222,21 +304,16 @@
 #         run: mkdir -p android/app/src/main/assets
 
 #       - name: Bundle React Native
-#         run: |
-#           react-native bundle \
-#             --platform android \
-#             --dev false \
-#             --entry-file index.js \
-#             --bundle-output android/app/src/main/assets/index.android.bundle \
-#             --assets-dest android/app/src/main/res
+#         run: npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
+
+#       - name: Build Android APK
+#         run: npx react-native build-android --mode=release
 
 #       - name: Generate AAB or APK
 #         run: |
 #           if ${{ github.event.inputs.aab_generation == true }}; then
-#             cd android && ./gradlew bundleRelease
 #             echo "artifact_path=android/app/build/outputs/bundle/release/app.aab" >> $GITHUB_ENV
 #           else
-#             cd android && ./gradlew assembleRelease
 #             echo "artifact_path=android/app/build/outputs/apk/release/app-release.apk" >> $GITHUB_ENV
 #           fi
 
@@ -246,7 +323,8 @@
 #           artifacts: ${{ env.artifact_path }}
 #           tag: v1.0.${{ github.run_number }}
 #           token: ${{ secrets.TOKEN }}
-##############################################################
+
+################################
 
 name: Manual Workflow for Building APK OR AAB
 
@@ -306,8 +384,13 @@ jobs:
       - name: Bundle React Native
         run: npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
 
-      - name: Build Android APK
-        run: npx react-native build-android --mode=release
+      - name: Assemble APK or AAB
+        run: |
+          if ${{ github.event.inputs.aab_generation == true }}; then
+            cd android && ./gradlew bundleRelease
+          else
+            cd android && ./gradlew assembleRelease
+          fi
 
       - name: Generate AAB or APK
         run: |
